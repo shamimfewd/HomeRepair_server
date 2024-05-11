@@ -49,7 +49,6 @@ async function run() {
     // get data throw of the email
     app.get("/item/:email", async (req, res) => {
       const query = { providerEmail: req.params.email };
-      console.log(query);
       const result = await servicesCollection.find(query).toArray();
       res.send(result);
     });
@@ -60,6 +59,12 @@ async function run() {
       const query = { _id: new ObjectId(id) };
       const result = await servicesCollection.deleteOne(query);
       res.send(result);
+    });
+
+    //update service item
+    app.get("/item/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
     });
 
     // await client.db("admin").command({ ping: 1 });
