@@ -62,9 +62,32 @@ async function run() {
     });
 
     //update service item
-    app.get("/item/:id", async (req, res) => {
+    app.get("/updateItem/:id", async (req, res) => {
       const id = req.params.id;
-      const query = {_id: new ObjectId(id)}
+      const query = { _id: new ObjectId(id) };
+      const result = await servicesCollection.findOne(query);
+      res.send(result);
+    });
+
+    app.put("/updateItem/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const optional = { upsert: true };
+      const data = {
+        $set: {
+          photo: req.body.photo,
+          serviceArea: req.body.serviceArea,
+          serviceName: req.body.serviceName,
+          price: req.body.price,
+          description: req.body.description,
+          providerName: req.body.providerName,
+          providerEmail: req.body.providerEmail,
+          providerPhoto: req.body.providerPhoto,
+        },
+      };
+
+      const result = await servicesCollection.updateOne(filter, data, optional);
+      res.send(result);
     });
 
     // await client.db("admin").command({ ping: 1 });
