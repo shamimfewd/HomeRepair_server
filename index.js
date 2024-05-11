@@ -46,8 +46,8 @@ async function run() {
       res.send(result);
     });
 
-    // get a throw of the email
-    app.get("/serv/:email", async (req, res) => {
+    // get data throw of the email
+    app.get("/test/:email", async (req, res) => {
       const query = { email: req.params.email };
       const result = await servicesCollection.findOne(query).toArray();
       res.send(result);
