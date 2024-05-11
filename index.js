@@ -47,9 +47,10 @@ async function run() {
     });
 
     // get data throw of the email
-    app.get("/test/:email", async (req, res) => {
-      const query = { email: req.params.email };
-      const result = await servicesCollection.findOne(query).toArray();
+    app.get("/item/:email", async (req, res) => {
+      const query = { providerEmail: req.params.email };
+      console.log(query);
+      const result = await servicesCollection.find(query).toArray();
       res.send(result);
     });
 
