@@ -34,13 +34,17 @@ async function run() {
 
     // Send a ping to confirm a successful connection
 
-
-
     // post on booking page
     app.post("/bookingData", async (req, res) => {
       const bookingService = req.body;
       console.log(bookingService);
       const result = await bookingCollection.insertOne(bookingService);
+      res.send(result);
+    });
+
+    app.get("/bookingData", async (req, res) => {
+      const cursor = bookingCollection.find();
+      const result = await cursor.toArray();
       res.send(result);
     });
 
