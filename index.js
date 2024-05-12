@@ -28,10 +28,23 @@ async function run() {
     const servicesCollection = client
       .db("assignment11DB")
       .collection("services");
+    const bookingCollection = client
+      .db("assignment11DB")
+      .collection("bookingData");
 
     // Send a ping to confirm a successful connection
 
-    // post service-------------------------
+
+
+    // post on booking page
+    app.post("/bookingData", async (req, res) => {
+      const bookingService = req.body;
+      console.log(bookingService);
+      const result = await bookingCollection.insertOne(bookingService);
+      res.send(result);
+    });
+
+    // post service home page-------------------------
     app.post("/service", async (req, res) => {
       const newService = req.body;
       console.log(newService);
