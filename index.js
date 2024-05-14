@@ -37,14 +37,36 @@ async function run() {
     // post on booking page
     app.post("/bookingData", async (req, res) => {
       const bookingService = req.body;
-      console.log(bookingService);
       const result = await bookingCollection.insertOne(bookingService);
       res.send(result);
     });
 
-    app.get("/bookingData", async (req, res) => {
-      const cursor = bookingCollection.find();
-      const result = await cursor.toArray();
+    app.get("/bookingData/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const result = await bookingCollection.find(query).toArray();
+      res.send(result);
+    });
+
+    // get data for awner of the job
+
+    app.get("/serviceToDoData/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { providerEmail: email };
+      const result = await bookingCollection.find(query).toArray();
+      res.send(result);
+    });
+
+    // update status
+
+    app.patch("/updateSta/:id", async (req, res) => {
+      const id = req.params.id;
+      const status = req.body;
+      const query = { _id: new ObjectId(id) };
+      const updatedata = {
+        $set: status ,
+      };
+      const result = await bookingCollection.updateOne(query, updatedata);
       res.send(result);
     });
 
@@ -106,6 +128,8 @@ async function run() {
       const result = await servicesCollection.updateOne(filter, data, optional);
       res.send(result);
     });
+
+    //get all bits data my email
 
     // await client.db("admin").command({ ping: 1 });
     console.log(
