@@ -64,9 +64,22 @@ async function run() {
       const status = req.body;
       const query = { _id: new ObjectId(id) };
       const updatedata = {
-        $set: status ,
+        $set: status,
       };
       const result = await bookingCollection.updateOne(query, updatedata);
+      res.send(result);
+    });
+
+    app.get("/allData", async (req, res) => {
+      const search = req.query.search;
+      const filter = req.query.filter;
+
+      let query = {
+        serviceName: { $regex: search, $options: "i" },
+      };
+      if (filter) query = { serviceName: filter };
+
+      const result = await bookingCollection().find(query).toArray();
       res.send(result);
     });
 
