@@ -6,11 +6,10 @@ require("dotenv").config();
 const port = process.env.PORT || 5000;
 
 // middle ware
-app.use(
-  cors({
-    origin: ["http://localhost:5173/"],
-  })
-);
+// {
+// origin: ["http://localhost:5173/"],
+// }
+app.use(cors());
 app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ssblxww.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
@@ -111,7 +110,7 @@ async function run() {
       res.send(result);
     });
 
-    // get data for awner of the job
+    // get data for buyer of the job
 
     app.get("/serviceToDoData/:email", async (req, res) => {
       const email = req.params.email;
@@ -133,20 +132,17 @@ async function run() {
       res.send(result);
     });
 
-    // //  get data for search filter
-    // app.get("/allData", async (req, res) => {
-    //   const search = req.query.search;
-    //   // const filter = req.query.filter;
-    //   let query = {
-    //     serviceName: { $regex: search, $options: "i" },
-    //   };
+    //  get data for search filter
+    app.get("/allData", async (req, res) => {
+      const search = req.query.search;
+      let query = {
+        serviceName: { $regex: search, $options: "i" },
+      };
+      const result = await servicesCollection.find(query).toArray();
+      res.send(result);
+    });
 
-    //   // if (filter) query = { serviceName: filter };
-
-    //   const result = await servicesCollection().find(query).toArray();
-    //   res.send(result);
-    // });
-
+    // ============================
     // await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
