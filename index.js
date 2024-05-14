@@ -6,7 +6,11 @@ require("dotenv").config();
 const port = process.env.PORT || 5000;
 
 // middle ware
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:5173/"],
+  })
+);
 app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ssblxww.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
@@ -33,55 +37,6 @@ async function run() {
       .collection("bookingData");
 
     // Send a ping to confirm a successful connection
-
-    // post on booking page
-    app.post("/bookingData", async (req, res) => {
-      const bookingService = req.body;
-      const result = await bookingCollection.insertOne(bookingService);
-      res.send(result);
-    });
-
-    app.get("/bookingData/:email", async (req, res) => {
-      const email = req.params.email;
-      const query = { email: email };
-      const result = await bookingCollection.find(query).toArray();
-      res.send(result);
-    });
-
-    // get data for awner of the job
-
-    app.get("/serviceToDoData/:email", async (req, res) => {
-      const email = req.params.email;
-      const query = { providerEmail: email };
-      const result = await bookingCollection.find(query).toArray();
-      res.send(result);
-    });
-
-    // update status
-
-    app.patch("/updateSta/:id", async (req, res) => {
-      const id = req.params.id;
-      const status = req.body;
-      const query = { _id: new ObjectId(id) };
-      const updatedata = {
-        $set: status,
-      };
-      const result = await bookingCollection.updateOne(query, updatedata);
-      res.send(result);
-    });
-
-    app.get("/allData", async (req, res) => {
-      const search = req.query.search;
-      const filter = req.query.filter;
-
-      let query = {
-        serviceName: { $regex: search, $options: "i" },
-      };
-      if (filter) query = { serviceName: filter };
-
-      const result = await bookingCollection().find(query).toArray();
-      res.send(result);
-    });
 
     // post service home page-------------------------
     app.post("/service", async (req, res) => {
@@ -142,7 +97,55 @@ async function run() {
       res.send(result);
     });
 
-    //get all bits data my email
+    // post on booking page
+    app.post("/bookingData", async (req, res) => {
+      const bookingService = req.body;
+      const result = await bookingCollection.insertOne(bookingService);
+      res.send(result);
+    });
+
+    app.get("/bookingData/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const result = await bookingCollection.find(query).toArray();
+      res.send(result);
+    });
+
+    // get data for awner of the job
+
+    app.get("/serviceToDoData/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { providerEmail: email };
+      const result = await bookingCollection.find(query).toArray();
+      res.send(result);
+    });
+
+    // update status
+
+    app.patch("/updateSta/:id", async (req, res) => {
+      const id = req.params.id;
+      const status = req.body;
+      const query = { _id: new ObjectId(id) };
+      const updatedata = {
+        $set: status,
+      };
+      const result = await bookingCollection.updateOne(query, updatedata);
+      res.send(result);
+    });
+
+    // //  get data for search filter
+    // app.get("/allData", async (req, res) => {
+    //   const search = req.query.search;
+    //   // const filter = req.query.filter;
+    //   let query = {
+    //     serviceName: { $regex: search, $options: "i" },
+    //   };
+
+    //   // if (filter) query = { serviceName: filter };
+
+    //   const result = await servicesCollection().find(query).toArray();
+    //   res.send(result);
+    // });
 
     // await client.db("admin").command({ ping: 1 });
     console.log(
